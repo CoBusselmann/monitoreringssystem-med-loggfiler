@@ -1,1 +1,3 @@
-Här lägger vi in alla krav som behövs, dvs vad vi har installerat med hjälp av pip install.
+#Här lägger vi in alla krav som behövs, dvs vad vi har installerat med hjälp av pip install.
+
+psutil
