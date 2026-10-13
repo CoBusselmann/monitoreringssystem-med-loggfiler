@@ -67,7 +67,12 @@ def menu():
                     print(f"{i}. {alarm['category'].upper()} - {alarm['level']}%")
 
         elif choice == "4":
-            pass
+            try:
+                manager.send_alarms("alarms.txt")
+                print("Larmen har skickats till Monitoreringssystemet.")
+            except OSError:
+                print("Kunde inte spara filen.")
+
         elif choice == "5":
             print("Avslutar system.")
             break
