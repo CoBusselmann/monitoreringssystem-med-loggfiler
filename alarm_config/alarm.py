@@ -19,3 +19,8 @@ class AlarmManager:
         
     def show_alarms(self):
         return self.alarms
+
+    def send_alarms(self, path):
+        with open(path, "w", encoding="utf-8") as file:
+            for alarm in self.alarms:
+                file.write(f"{alarm['category']};{alarm['level']}\n")
