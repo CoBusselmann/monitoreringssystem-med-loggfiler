@@ -41,7 +41,19 @@ def menu():
             print(f"Du har lagt till ett {category.upper()} larm med nivå {level}%.")
 
         elif choice == "2":
-            pass
+            alarms = manager.show_alarms()
+            if not alarms: 
+                print("Inga alarm finns att ta bort.")
+            else:
+                print("Vilket alarm vill du ta bort?")
+                for i, alarm in enumerate(alarms, start=1):
+                    print(f"{i}. {alarm['category'].upper()} - {alarm['level']}%")
+                try:
+                    index = int(input("Ange numret på alarmet du vill ta bort: ")) - 1
+                    removed_alarm = manager.remove_alarm(index)
+                    print(f"Du har tagit bort ett {removed_alarm['category'].upper()} larm med nivå {removed_alarm['level']}%.")
+                except (ValueError, IndexError):
+                    print("Ogiltigt val, försök igen.")
 
         elif choice == "3":
                    
