@@ -34,14 +34,15 @@ def monitoring_loop(limittype, maxvalue=None):
                 break
             if limittype == "Iteration" and iterations >= maxvalue:
                 break
-            if limittype == "Oändlig":
-                writer("Tryck CTRL-C för att avbryta monitoreringen")
-       
+
             cpu = psutil.cpu_percent(interval=1)
             ram = psutil.virtual_memory()
             disk = psutil.disk_usage("C:")
             
             clear_terminal()
+            if limittype == "Oändlig":
+                writer(f"Tryck CTRL-C för att avbryta monitoreringen\n\n")
+
             if cpu >= warning_limits["CPU"]:
                 writer(f"CPU-användning är över {warning_limits['CPU']}%\n")
 
@@ -51,16 +52,13 @@ def monitoring_loop(limittype, maxvalue=None):
             if disk.percent >= warning_limits["DISK"]:
                 writer(f"Disk-användning är över {warning_limits['DISK']}%\n")
 
-            if limittype == "Oändlig":
-                writer(f"\nTryck CTRL-C för att avbryta monitoreringen\n")
-
             writer(f"\nCPU: {cpu}% RAM: {ram.percent}% Disk: {disk.percent}%\r")
             
             #Gör att texten skrivs ut direkt och buffras inte
             sys.stdout.flush()
 
             #time.sleep skapar en paus i X sekunder, för att användaren ska kunna se det som står i terminalen
-            time.sleep(2)
+            time.sleep(1)
 
             iterations += 1
                 
