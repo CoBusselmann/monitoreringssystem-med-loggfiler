@@ -51,6 +51,9 @@ def monitoring_loop(limittype, maxvalue=None):
             if disk.percent >= warning_limits["DISK"]:
                 writer(f"Disk-användning är över {warning_limits['DISK']}%\n")
 
+            if limittype == "Oändlig":
+                writer(f"\nTryck CTRL-C för att avbryta monitoreringen\n")
+
             writer(f"\nCPU: {cpu}% RAM: {ram.percent}% Disk: {disk.percent}%\r")
             
             #Gör att texten skrivs ut direkt och buffras inte
@@ -58,11 +61,11 @@ def monitoring_loop(limittype, maxvalue=None):
 
             #time.sleep skapar en paus i X sekunder, för att användaren ska kunna se det som står i terminalen
             time.sleep(2)
+
             iterations += 1
-            if limittype == "Oändlig":
-                time.sleep(2)
+                
     except KeyboardInterrupt:
-        print("\nMonitorering manuellt avbruten\n")
+        print("\n\nMonitorering manuellt avbruten\n")
         main()
 
     print("Monitorering avslutad - återgår till huvudmenyn\n")
@@ -127,7 +130,8 @@ def main():
     choice = input("Vad vill du göra?\n" \
     "1. Ladda alarm.\n" \
     "2. Starta monitorsession.\n" \
-    "3. Avsluta.\n")
+    "3. Avsluta.\n"
+    "Gör ett val (1-3): ")
     match choice:
         case "1":
             pass
