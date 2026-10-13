@@ -36,13 +36,24 @@ def menu():
             if level < 0 or level > 100:
                 print("Larmnivån måste vara mellan 0 och 100. Försök igen.")
                 continue
-            
+
             manager.add_alarm(category, level)
+            print(f"Du har lagt till ett {category.upper()} larm med nivå {level}%.")
 
         elif choice == "2":
-            print("Vilket alarm vill du ta bort?")
-        elif choice == "3":
             pass
+
+        elif choice == "3":
+                   
+            alarms = manager.show_alarms()
+
+            if not alarms:
+                print("Inga alarm är finns.")
+            else:
+                print("Aktiva alarm:")
+                for i, alarm in enumerate(alarms, start=1):
+                    print(f"{i}. {alarm['category'].upper()} - {alarm['level']}%")
+
         elif choice == "4":
             pass
         elif choice == "5":
