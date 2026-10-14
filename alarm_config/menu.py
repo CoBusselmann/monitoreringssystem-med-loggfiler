@@ -3,6 +3,7 @@ from alarm import AlarmManager
 def menu():
 
     manager = AlarmManager()
+    manager.load_alarms("alarm_doc.txt")
     while True:
         print("----Larm-konfigurationssystem----")
         print("1. Lägg till alarm")
@@ -41,7 +42,7 @@ def menu():
             print(f"Du har lagt till ett {category.upper()} larm med nivå {level}%.")
 
         elif choice == "2":
-            
+
             alarms = manager.show_alarms()
             if not alarms: 
                 print("Inga alarm finns att ta bort.")
@@ -70,17 +71,18 @@ def menu():
         elif choice == "4":
 
             try:
-                manager.send_alarms("alarms.txt")
+                manager.send_alarms("alarm_doc.txt")
                 print("Larmen har skickats till Monitoreringssystemet.")
             except OSError:
                 print("Kunde inte spara filen.")
 
         elif choice == "5":
 
-            manager.saved_alarms("alarms_work.txt")
+            manager.saved_alarms("alarm_doc.txt")
             print("Avslutar system.")
             break
         else:
             print("Ogiltigt meny val, försök igen.")
+
 menu()
 

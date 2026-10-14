@@ -30,5 +30,13 @@ class AlarmManager:
             for alarm in self.alarms:
                 file.write(f"{alarm['category']};{alarm['level']}\n")
         
-    def load_alarms():
-        pass
+    def load_alarms(self, path):
+        try:
+            with open(path, "r", encoding="utf-8") as file:
+                for i in file:
+                    category, level = i.strip().split(";")
+                    self.alarms.append({"category": category, "level":float(level)})
+        except FileNotFoundError:
+            pass
+
+        
