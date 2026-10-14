@@ -41,6 +41,7 @@ def menu():
             print(f"Du har lagt till ett {category.upper()} larm med nivå {level}%.")
 
         elif choice == "2":
+            
             alarms = manager.show_alarms()
             if not alarms: 
                 print("Inga alarm finns att ta bort.")
@@ -67,6 +68,7 @@ def menu():
                     print(f"{i}. {alarm['category'].upper()} - {alarm['level']}%")
 
         elif choice == "4":
+
             try:
                 manager.send_alarms("alarms.txt")
                 print("Larmen har skickats till Monitoreringssystemet.")
@@ -74,6 +76,8 @@ def menu():
                 print("Kunde inte spara filen.")
 
         elif choice == "5":
+
+            manager.saved_alarms("alarms_work.txt")
             print("Avslutar system.")
             break
         else:

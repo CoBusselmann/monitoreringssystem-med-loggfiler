@@ -25,7 +25,10 @@ class AlarmManager:
             for alarm in self.alarms:
                 file.write(f"{alarm['category']};{alarm['level']}\n")
 
-    def saved_alarms():
-        pass
+    def saved_alarms(self, path):
+        with open(path, "w", encoding="utf-8") as file:
+            for alarm in self.alarms:
+                file.write(f"{alarm['category']};{alarm['level']}\n")
+        
     def load_alarms():
         pass
