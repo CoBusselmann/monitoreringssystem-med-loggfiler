@@ -6,6 +6,7 @@ def menu():
     manager.load_alarms("alarm_doc.txt")
     #Hämtar sparade alarm från filen alarm_doc.txt
     while True:
+        
         print("----Larm-konfigurationssystem----")
         print("1. Lägg till alarm")
         print("2. Ta bort alarm")
