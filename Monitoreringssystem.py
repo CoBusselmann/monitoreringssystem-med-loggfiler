@@ -1,19 +1,47 @@
 import psutil
 import time
 import sys
+from loggsystem import Loggsystem
 
+logg = Loggsystem()
 
-# Ställ in larmnivåer, kommer senare hämtas från larm-konfigurationssystem
+# Ställ in larmnivåer, värden hämtas från alarm_doc.txt via load_alarms()
 warning_limits = {
-    "CPU": 5,
-    "RAM": 40,
-    "DISK": 60
+    "CPU": None,
+    "RAM": None,
+    "DISK": None
 }
 
 # Rensar terminalen - används för att presentera monitoreringsinformationen snyggare
 def clear_terminal():
     sys.stdout.write("\033[H\033[J")
 
+
+def load_alarms():
+    # Rensar terminalen
+    clear_terminal()
+
+    print("Följande alarm har ställts in:")
+    
+    with open("alarm_doc.txt") as f:
+        for i in f:
+            value = i.strip().split(";", 1)
+            if "cpu;" in i:
+                i.strip().split(";")
+                warning_limits["CPU"] = float(value[1])
+                print(f"CPU-alarm inställt till: {warning_limits["CPU"]}%")
+            elif "ram;" in i:
+                i.strip().split(";")
+                warning_limits["RAM"] = float(value[1])
+                print(f"RAM-alarm inställt till: {warning_limits["RAM"]}%")
+            elif "disk;" in i:
+                i.strip().split(";")
+                warning_limits["DISK"] = float(value[1])
+                print(f"DISK-alarm inställt till: {warning_limits["DISK"]}%")
+    print("Återgår till huvudmenyn om 5 sekunder")
+    time.sleep(5)
+    main() 
+    
 
 # Monitoreringsloop som körs tills användaren avbryter eller tills en viss tid/iterationer har passerat
 def monitoring_loop(limittype, maxvalue=None):
@@ -45,10 +73,11 @@ def monitoring_loop(limittype, maxvalue=None):
 
             if cpu >= warning_limits["CPU"]:
                 writer(f"CPU-användning är över {warning_limits['CPU']}%\n")
+                logg.larm("CPU", warning_limits["CPU"])
 
             if ram.percent >= warning_limits["RAM"]:
                 writer(f"RAM-användning är över {warning_limits['RAM']}%\n")
-
+        
             if disk.percent >= warning_limits["DISK"]:
                 writer(f"Disk-användning är över {warning_limits['DISK']}%\n")
 
@@ -125,6 +154,7 @@ def start_monitor_session():
 
 # Huvudmeny
 def main():
+    clear_terminal()
     choice = input("Vad vill du göra?\n" \
     "1. Ladda alarm.\n" \
     "2. Starta monitorsession.\n" \
@@ -132,7 +162,7 @@ def main():
     "Gör ett val (1-3): ")
     match choice:
         case "1":
-            pass
+            load_alarms()
         case "2":
             start_monitor_session()
         case "3":
