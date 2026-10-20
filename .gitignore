@@ -1,0 +1,10 @@
+# Mina testfiler
+test_logg.py
+
+# Loggfiler
+logs/
+*.log
+
+# Python cache
+__pycache__/
+*.pyc
