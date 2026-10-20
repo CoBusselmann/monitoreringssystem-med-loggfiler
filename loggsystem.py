@@ -5,7 +5,7 @@ from pathlib import Path
 
 
 class Loggsystem:
-    def __init__(self, programnamn):
+    def __init__(self):
         # Skapar mappen logs om den inte redan finns
         self.loggmapp = Path("logs")
         self.loggmapp.mkdir(exist_ok=True)
@@ -13,10 +13,10 @@ class Loggsystem:
         # Skapar ett unikt filnamn med datum, tid och ID
         tid = datetime.now().strftime("%Y-%m-%d_%H-%M-%S_%f")
 
-        self.filnamn = self.loggmapp / f"{programnamn}_{tid}.log"
+        self.filnamn = self.loggmapp / f"{tid}.log"
 
         # Skapar en logger för just denna session
-        self.logger = logging.getLogger(f"logg_{programnamn}_{tid}")
+        self.logger = logging.getLogger(f"logg_{tid}")
         self.logger.setLevel(logging.INFO)
         self.logger.propagate = False
 
@@ -38,7 +38,7 @@ class Loggsystem:
         self.filhanterare.setFormatter(formatmall)
         self.logger.addHandler(self.filhanterare)
 
-        self.info(f"{programnamn} startat")
+        self.info(f"Loggning har startat")
 
     def info(self, meddelande):
         # Loggar information som visas för användaren
