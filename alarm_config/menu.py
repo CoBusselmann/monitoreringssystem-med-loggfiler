@@ -1,9 +1,10 @@
 from alarm import AlarmManager
-
+#Hämtar AlarmManager klassen från alarm.py filen
 def menu():
 
     manager = AlarmManager()
     manager.load_alarms("alarm_doc.txt")
+    #Hämtar sparade alarm från filen alarm_doc.txt
     while True:
         print("----Larm-konfigurationssystem----")
         print("1. Lägg till alarm")
@@ -12,14 +13,16 @@ def menu():
         print("4. Skicka larm till Monitoreringssystem")
         print("5. Avsluta")
         choice = input("Meny val: ")
-
+        #Meny vid start av programmet
         if choice == "1":
 
             print("Vilket alarm vill du lägga till?")
             print("1. CPU")
             print("2. RAM")
             print("3. Disk")
+
             category = input("Alarm val: ")
+            
             if category == "1":
                 category = "cpu"
             elif category == "2":
@@ -73,7 +76,7 @@ def menu():
             try:
                 manager.send_alarms("alarm_doc.txt")
                 print("Larmen har skickats till Monitoreringssystemet.")
-            except OSError:
+            except OSError:#Felhantering ifall filen inte kan sparas
                 print("Kunde inte spara filen.")
 
         elif choice == "5":
@@ -81,7 +84,9 @@ def menu():
             manager.saved_alarms("alarm_doc.txt")
             print("Avslutar system.")
             break
+
         else:
+
             print("Ogiltigt meny val, försök igen.")
 
 menu()
