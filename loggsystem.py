@@ -39,6 +39,7 @@ class Loggsystem:
         self.logger.addHandler(self.filhanterare)
 
         self.info(f"Loggning har startat")
+        self.info("Loggning har startat")
 
     def info(self, meddelande):
         # Loggar information som visas för användaren
