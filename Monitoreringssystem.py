@@ -93,6 +93,7 @@ class Monitororeringssystem:
                 iterations += 1
                     
         except KeyboardInterrupt:
+            clear_terminal()
             print("Monitorering manuellt avbruten - återgår till huvudmenyn")
             time.sleep(2)
             return
