@@ -9,7 +9,7 @@ from loggsystem import Loggsystem
 def clear_terminal():
     sys.stdout.write("\033[H\033[J")
 
-class Monitororeringssystem:
+class Monitoreringssystem:
     def __init__(self):
         self.log = Loggsystem()
         # Ställ in larmnivåer, värden hämtas från alarm_doc.txt via load_alarms()
@@ -20,6 +20,7 @@ class Monitororeringssystem:
         }
 
     def load_alarms(self):
+        self.log.funktion("load_alarms")
         # Rensar terminalen
         clear_terminal()
 
@@ -44,7 +45,7 @@ class Monitororeringssystem:
 
     # Monitoreringsloop som körs tills användaren avbryter eller tills en viss tid/iterationer har passerat
     def monitoring_loop(self, limittype, maxvalue=None):
-        
+        self.log.funktion("monitoring_loop")
         writer = sys.stdout.write
 
         # Mäter hur länge monitoreringen har pågått
@@ -82,28 +83,29 @@ class Monitororeringssystem:
                     writer(f"Disk-användning är över {self.warning_limits['DISK']}%\n")
                     self.log.larm("DISK", self.warning_limits["DISK"])
 
-                writer(f"\nCPU: {cpu}% RAM: {ram.percent}% Disk: {disk.percent}%\r")
+                writer(f"\nCPU: {cpu}% | RAM: {ram.percent}% | Disk: {disk.percent}%\r")
                 
                 #Gör att texten skrivs ut direkt och buffras inte
                 sys.stdout.flush()
 
                 #time.sleep skapar en paus i X sekunder, för att användaren ska kunna se det som står i terminalen
-                time.sleep(1)
+                time.sleep(2)
 
                 iterations += 1
                     
         except KeyboardInterrupt:
             clear_terminal()
             print("Monitorering manuellt avbruten - återgår till huvudmenyn")
-            time.sleep(2)
+            time.sleep(3)
             return
             
 
         print("Monitorering avslutad - återgår till huvudmenyn")
+        time.sleep(3)
         
     # Startar monitoreringssessionen och frågar användaren om hur länge den ska köras
     def start_monitor_session(self):
-        
+        self.log.funktion("start_monitor_session")
         clear_terminal()
         duration = 0
         choice = input("Hur vill du bestämma tid?\n" \
@@ -113,9 +115,10 @@ class Monitororeringssystem:
         "Gör ett val (1-3): ")
         
         if choice == "1":
+            self.log.anvandarval("Monitoreringssession", "Tid")
             clear_terminal()
             try:
-                duration = int(input("Ange längd i sekunder\n"))
+                duration = int(input("Ange längd i sekunder: "))
                 if duration <= 0:
                     print("Värdet måste vara högre än 0.")
                     time.sleep(2)
@@ -133,10 +136,11 @@ class Monitororeringssystem:
                 
             
         elif choice == "2":
+            self.log.anvandarval("Monitoreringssession", "Iterationer")
             clear_terminal()
             try:
                 duration = int(
-                    input("Ange längd i antal iterationer: \n")
+                    input("Ange längd i antal iterationer: ")
                     )
                 if duration <= 0:
                     print("Värdet måste vara högre än 0.")
@@ -152,11 +156,12 @@ class Monitororeringssystem:
                 main()
                 
         elif choice == "3":
+            self.log.anvandarval("Monitoreringssession", "Oändlig")
             self.monitoring_loop("Oändlig")
 
 # Huvudmeny
 def main():
-    monitor = Monitororeringssystem()
+    monitor = Monitoreringssystem()
     while True:
         clear_terminal()
         choice = input("Vad vill du göra?\n" \
@@ -167,12 +172,16 @@ def main():
         match choice:
             case "1":
                 monitor.load_alarms()
+                monitor.log.anvandarval("Huvudmeny", "Ladda alarm")
             case "2":
                 monitor.start_monitor_session()
+                monitor.log.anvandarval("Huvudmeny", "Starta monitorsession")
             case "3":
+                monitor.log.anvandarval("Huvudmeny", "Avsluta")
                 exit(0)
             case _:
                 print("Du har angivit ett felaktikt val")
+                monitor.log.anvandarval("Huvudmeny", "Felaktigt val")
                 time.sleep(2)
 
 if __name__ == "__main__":
