@@ -13,6 +13,7 @@ def clear_terminal():
 def alarm_triggered(value, limit):
     return limit is not None and value >= limit
 
+# Skapar en klass för monitoreringssystemet
 class Monitoreringssystem:
     def __init__(self):
         self.log = Loggsystem()
@@ -23,6 +24,7 @@ class Monitoreringssystem:
             "DISK": None
         }
 
+    # Laddar larmnivåer från alarm_doc.txt och uppdaterar self.warning_limits
     def load_alarms(self):
         try:
             self.log.funktion("load_alarms")
@@ -34,21 +36,26 @@ class Monitoreringssystem:
             with open("alarm_doc.txt") as f:
                 for i in f:
                     value = i.strip().split(";", 1)
-                    if "cpu;" in i:
+                    if "cpu;" in i and float(value[1]) >= 0 and float(value[1]) <= 100:
                         self.warning_limits["CPU"] = float(value[1])
                         print(f"CPU-alarm inställt till: {self.warning_limits["CPU"]}%")
-                    elif "ram;" in i:
+                    elif "ram;" in i and float(value[1]) >= 0 and float(value[1]) <= 100:
                         self.warning_limits["RAM"] = float(value[1])
                         print(f"RAM-alarm inställt till: {self.warning_limits["RAM"]}%")
-                    elif "disk;" in i:
+                    elif "disk;" in i and float(value[1]) >= 0 and float(value[1])<= 100:
                         self.warning_limits["DISK"] = float(value[1])
                         print(f"DISK-alarm inställt till: {self.warning_limits["DISK"]}%")
+            
+            self.log.info("Alarm har laddats från alarm_doc.txt")    
             print("Återgår till huvudmenyn om 5 sekunder")
+            self.log.info("Återgår till huvudmenyn om 5 sekunder")
             time.sleep(5)
         except OSError as e:
             print(f"Fel vid läsning av alarm_doc.txt: {e}")
+            self.log.fel(f"Fel vid läsning av alarm_doc.txt: {e}")
         except ValueError as e:
             print(f"Felaktigt värde i alarm_doc.txt: {e}")
+            self.log.fel(f"Felaktigt värde i alarm_doc.txt: {e}")
         
 
     # Monitoreringsloop som körs tills användaren avbryter eller tills en viss tid/iterationer har passerat
@@ -66,19 +73,23 @@ class Monitoreringssystem:
                 
                 clear_terminal()
 
+                # Kollar om monitoreringen ska avbrytas baserat på tid eller antal iterationer
                 if limittype == "Tid" and (time.monotonic() - start_timer >= maxvalue):
                     break
                 if limittype == "Iteration" and iterations >= maxvalue:
                     break
 
+                # Hämtar CPU, RAM och Disk-användning
                 cpu = psutil.cpu_percent(interval=1)
                 ram = psutil.virtual_memory()
                 disk = psutil.disk_usage("C:")
                 
                 clear_terminal()
+                
                 if limittype == "Oändlig":
                     writer(f"Tryck CTRL-C för att avbryta monitoreringen\n\n")
 
+                # Kollar om CPU, RAM eller Disk har passerat larmgränsen och loggar det i loggsystemet - True om larmet har passerat, annars False
                 if alarm_triggered(cpu, self.warning_limits["CPU"]):
                     writer(f"CPU-användning är över {self.warning_limits['CPU']}%\n")
                     self.log.larm("CPU", self.warning_limits["CPU"])
