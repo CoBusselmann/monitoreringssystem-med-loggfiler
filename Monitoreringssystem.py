@@ -9,6 +9,10 @@ from loggsystem import Loggsystem
 def clear_terminal():
     sys.stdout.write("\033[H\033[J")
 
+# Kontrollerar om ett mätvärde har nått eller passerat en larmgräns och returnerar True eller False.
+def alarm_triggered(value, limit):
+    return limit is not None and value >= limit
+
 class Monitoreringssystem:
     def __init__(self):
         self.log = Loggsystem()
@@ -20,28 +24,32 @@ class Monitoreringssystem:
         }
 
     def load_alarms(self):
-        self.log.funktion("load_alarms")
-        # Rensar terminalen
-        clear_terminal()
+        try:
+            self.log.funktion("load_alarms")
+            # Rensar terminalen
+            clear_terminal()
 
-        print("Följande alarm har ställts in:")
+            print("Följande alarm har ställts in:")
+            
+            with open("alarm_doc.txt") as f:
+                for i in f:
+                    value = i.strip().split(";", 1)
+                    if "cpu;" in i:
+                        self.warning_limits["CPU"] = float(value[1])
+                        print(f"CPU-alarm inställt till: {self.warning_limits["CPU"]}%")
+                    elif "ram;" in i:
+                        self.warning_limits["RAM"] = float(value[1])
+                        print(f"RAM-alarm inställt till: {self.warning_limits["RAM"]}%")
+                    elif "disk;" in i:
+                        self.warning_limits["DISK"] = float(value[1])
+                        print(f"DISK-alarm inställt till: {self.warning_limits["DISK"]}%")
+            print("Återgår till huvudmenyn om 5 sekunder")
+            time.sleep(5)
+        except OSError as e:
+            print(f"Fel vid läsning av alarm_doc.txt: {e}")
+        except ValueError as e:
+            print(f"Felaktigt värde i alarm_doc.txt: {e}")
         
-        with open("alarm_doc.txt") as f:
-            for i in f:
-                value = i.strip().split(";", 1)
-                if "cpu;" in i:
-                    self.warning_limits["CPU"] = float(value[1])
-                    print(f"CPU-alarm inställt till: {self.warning_limits["CPU"]}%")
-                elif "ram;" in i:
-                    self.warning_limits["RAM"] = float(value[1])
-                    print(f"RAM-alarm inställt till: {self.warning_limits["RAM"]}%")
-                elif "disk;" in i:
-                    self.warning_limits["DISK"] = float(value[1])
-                    print(f"DISK-alarm inställt till: {self.warning_limits["DISK"]}%")
-        print("Återgår till huvudmenyn om 5 sekunder")
-        time.sleep(5)
-        
-    
 
     # Monitoreringsloop som körs tills användaren avbryter eller tills en viss tid/iterationer har passerat
     def monitoring_loop(self, limittype, maxvalue=None):
@@ -71,15 +79,15 @@ class Monitoreringssystem:
                 if limittype == "Oändlig":
                     writer(f"Tryck CTRL-C för att avbryta monitoreringen\n\n")
 
-                if self.warning_limits["CPU"] is not None and cpu >= self.warning_limits["CPU"]:
+                if alarm_triggered(cpu, self.warning_limits["CPU"]):
                     writer(f"CPU-användning är över {self.warning_limits['CPU']}%\n")
                     self.log.larm("CPU", self.warning_limits["CPU"])
 
-                if self.warning_limits["RAM"] is not None and ram.percent >= self.warning_limits["RAM"]:
+                if alarm_triggered(ram.percent, self.warning_limits["RAM"]):
                     writer(f"RAM-användning är över {self.warning_limits['RAM']}%\n")
                     self.log.larm("RAM", self.warning_limits["RAM"])
             
-                if self.warning_limits["DISK"] is not None and disk.percent >= self.warning_limits["DISK"]:
+                if alarm_triggered(disk.percent, self.warning_limits["DISK"]):
                     writer(f"Disk-användning är över {self.warning_limits['DISK']}%\n")
                     self.log.larm("DISK", self.warning_limits["DISK"])
 
@@ -119,22 +127,23 @@ class Monitoreringssystem:
             clear_terminal()
             try:
                 duration = int(input("Ange längd i sekunder: "))
+
                 if duration <= 0:
                     print("Värdet måste vara högre än 0.")
                     time.sleep(2)
                     return
 
                 print(f"Du har valt att starta en monitorering i {duration} sekunder")
-                completed = self.monitoring_loop("Tid", duration)
-                if completed:
-                    time.sleep(2)
-            except ValueError:
-                print("Felaktigt värde")
-                
+                self.monitoring_loop("Tid", duration)
+                time.sleep(2)
+            except ValueError as e:
+                print(f"Felaktigt värde: {e}")
+                time.sleep(2)
+
             except KeyboardInterrupt:
                 print("\nMonitorering manuellt avbruten\n")
-                
-            
+                time.sleep(2)
+
         elif choice == "2":
             self.log.anvandarval("Monitoreringssession", "Iterationer")
             clear_terminal()
@@ -148,13 +157,14 @@ class Monitoreringssystem:
                 print(f"Du har valt att starta en monitorering i {duration} iterationer")
                 self.monitoring_loop("Iteration", duration)
                 time.sleep(2)
-            except ValueError:
-                print("\nFelaktigt värde")
-                main()
+            except ValueError as e:
+                print(f"Felaktigt värde: {e}")
+                time.sleep(2)
+        
             except KeyboardInterrupt:
                 print("\nMonitorering manuellt avbruten\n")
-                main()
-                
+                time.sleep(2)
+
         elif choice == "3":
             self.log.anvandarval("Monitoreringssession", "Oändlig")
             self.monitoring_loop("Oändlig")
@@ -178,6 +188,7 @@ def main():
                 monitor.log.anvandarval("Huvudmeny", "Starta monitorsession")
             case "3":
                 monitor.log.anvandarval("Huvudmeny", "Avsluta")
+                monitor.log.avsluta()
                 exit(0)
             case _:
                 print("Du har angivit ett felaktikt val")
