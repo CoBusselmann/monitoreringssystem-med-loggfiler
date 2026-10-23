@@ -55,7 +55,7 @@ def menu():
 
             manager.add_alarm(category, level)
             print(f"Du har lagt till ett {category.upper()} larm med nivå {level}%.")
-            logg.larm(f"Larm aktiverat: {category}, Nivå: {level}")
+            
 
         elif choice == "2":
 
@@ -74,35 +74,44 @@ def menu():
                     removed_alarm = manager.remove_alarm(index)
                     print(f"Du har tagit bort ett {removed_alarm['category'].upper()} larm med nivå {removed_alarm['level']}%.")
                 except (ValueError, IndexError):
+                    logg.info("Ogiltigt val vid borttagning av alarm")
                     print("Ogiltigt val, försök igen.")
 
         elif choice == "3":
-                   
+
+            logg.funktion("Visa alarm, startat.")
             alarms = manager.show_alarms()
 
             if not alarms:
+                logg.info("Inga alarm finns.")
                 print("Inga alarm är finns.")
             else:
+                logg.info("Aktiva alarm visas.")
                 print("Aktiva alarm:")
                 for i, alarm in enumerate(alarms, start=1):
                     print(f"{i}. {alarm['category'].upper()} - {alarm['level']}%")
 
         elif choice == "4":
 
+            logg.funktion("Funktion, skicka larm till Monitoreringssystem.")
             try:
                 manager.send_alarms("alarm_doc.txt")
                 print("Larmen har skickats till Monitoreringssystemet.")
             except OSError:#Felhantering ifall filen inte kan sparas
                 print("Kunde inte spara filen.")
+                logg.fel("Fil kunde ej sparas.")
 
         elif choice == "5":
 
+            logg.funktion("Avslutar Larm-system.")
+            logg.data_sparad("Sparat larm i alarm_doc.txt")
             manager.saved_alarms("alarm_doc.txt")
             print("Avslutar system.")
             break
 
         else:
 
+            logg.fel("Ogiltigt meny val")
             print("Ogiltigt meny val, försök igen.")
 
 menu()
