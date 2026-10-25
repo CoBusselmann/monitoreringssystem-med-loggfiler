@@ -115,6 +115,7 @@ class Monitoreringssystem:
         except KeyboardInterrupt:
             clear_terminal()
             print("Monitorering manuellt avbruten - återgår till huvudmenyn")
+            self.log.info("Monitorering manuellt avbruten")
             time.sleep(3)
             return
             
@@ -141,18 +142,22 @@ class Monitoreringssystem:
 
                 if duration <= 0:
                     print("Värdet måste vara högre än 0.")
+                    self.log.fel("Felaktigt värde för sekunder")
                     time.sleep(2)
                     return
 
                 print(f"Du har valt att starta en monitorering i {duration} sekunder")
+                self.log.info(f"Monitorering startad i {duration} sekunder")
                 self.monitoring_loop("Tid", duration)
                 time.sleep(2)
             except ValueError as e:
                 print(f"Felaktigt värde: {e}")
+                self.log.fel("Felaktigt värde för sekunder")
                 time.sleep(2)
 
             except KeyboardInterrupt:
                 print("\nMonitorering manuellt avbruten\n")
+                self.log.info("Monitorering manuellt avbruten")
                 time.sleep(2)
 
         elif choice == "2":
@@ -164,20 +169,26 @@ class Monitoreringssystem:
                     )
                 if duration <= 0:
                     print("Värdet måste vara högre än 0.")
+                    self.log.fel("Felaktigt värde för iterationer")
+                    time.sleep(2)
                     return
                 print(f"Du har valt att starta en monitorering i {duration} iterationer")
+                self.log.info(f"Monitorering startad i {duration} iterationer")
                 self.monitoring_loop("Iteration", duration)
                 time.sleep(2)
             except ValueError as e:
                 print(f"Felaktigt värde: {e}")
+                self.log.fel("Felaktigt värde för iterationer")
                 time.sleep(2)
         
             except KeyboardInterrupt:
                 print("\nMonitorering manuellt avbruten\n")
+                self.log.info("Monitorering manuellt avbruten")
                 time.sleep(2)
 
         elif choice == "3":
             self.log.anvandarval("Monitoreringssession", "Oändlig")
+            self.log.info("Oändlig monitorering startad")
             self.monitoring_loop("Oändlig")
 
 # Huvudmeny
@@ -194,11 +205,14 @@ def main():
             case "1":
                 monitor.load_alarms()
                 monitor.log.anvandarval("Huvudmeny", "Ladda alarm")
+                monitor.log.info("Alarm har laddats från alarm_doc.txt")
             case "2":
                 monitor.start_monitor_session()
                 monitor.log.anvandarval("Huvudmeny", "Starta monitorsession")
+                monitor.log.info("Monitoreringssession har startats")
             case "3":
                 monitor.log.anvandarval("Huvudmeny", "Avsluta")
+                monitor.log.info("Programmet avslutas")
                 monitor.log.avsluta()
                 exit(0)
             case _:
