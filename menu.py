@@ -82,9 +82,9 @@ def menu():
                 try:
 
                     index = int(input("Ange numret på alarmet du vill ta bort: ")) - 1
-                    logg.anvandarval(f"Tar bort larm {index}")
                     removed_alarm = manager.remove_alarm(index)
                     print(f"Du har tagit bort ett {removed_alarm['category'].upper()} larm med nivå {removed_alarm['level']}%.")
+                    logg.info(f"Tar bort larm {removed_alarm['category'].upper()} med nivå {removed_alarm['level']}%")
                     #felhantering vid ogiltigt val av index.
                 except (ValueError, IndexError):
                     logg.info("Ogiltigt val vid borttagning av alarm")
