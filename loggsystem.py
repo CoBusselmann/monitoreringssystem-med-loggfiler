@@ -38,7 +38,6 @@ class Loggsystem:
         self.filhanterare.setFormatter(formatmall)
         self.logger.addHandler(self.filhanterare)
 
-        self.info(f"Loggning har startat")
         self.info("Loggning har startat")
 
     def info(self, meddelande):

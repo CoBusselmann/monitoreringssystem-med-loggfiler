@@ -150,6 +150,7 @@ class Monitoreringssystem:
                 self.log.info(f"Monitorering startad i {duration} sekunder")
                 self.monitoring_loop("Tid", duration)
                 time.sleep(2)
+                
             except ValueError as e:
                 print(f"Felaktigt värde: {e}")
                 self.log.fel("Felaktigt värde för sekunder")
@@ -172,10 +173,12 @@ class Monitoreringssystem:
                     self.log.fel("Felaktigt värde för iterationer")
                     time.sleep(2)
                     return
+                
                 print(f"Du har valt att starta en monitorering i {duration} iterationer")
                 self.log.info(f"Monitorering startad i {duration} iterationer")
                 self.monitoring_loop("Iteration", duration)
                 time.sleep(2)
+
             except ValueError as e:
                 print(f"Felaktigt värde: {e}")
                 self.log.fel("Felaktigt värde för iterationer")
@@ -203,13 +206,12 @@ def main():
         "Gör ett val (1-3): ")
         match choice:
             case "1":
-                monitor.load_alarms()
                 monitor.log.anvandarval("Huvudmeny", "Ladda alarm")
-                monitor.log.info("Alarm har laddats från alarm_doc.txt")
+                monitor.load_alarms()
             case "2":
-                monitor.start_monitor_session()
                 monitor.log.anvandarval("Huvudmeny", "Starta monitorsession")
                 monitor.log.info("Monitoreringssession har startats")
+                monitor.start_monitor_session()
             case "3":
                 monitor.log.anvandarval("Huvudmeny", "Avsluta")
                 monitor.log.info("Programmet avslutas")
@@ -218,6 +220,7 @@ def main():
             case _:
                 print("Du har angivit ett felaktikt val")
                 monitor.log.anvandarval("Huvudmeny", "Felaktigt val")
+                monitor.log.fel("Felaktigt val i huvudmenyn")
                 time.sleep(2)
 
 if __name__ == "__main__":
