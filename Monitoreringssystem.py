@@ -133,7 +133,8 @@ class Monitoreringssystem:
         "2. Iterationer\n"
         "3. Oändligt - Avbryts med CTRL-C\n"
         "Gör ett val (1-3): ")
-        
+
+        # Användaren väljer hur monitoreringssessionen ska köras.
         if choice == "1":
             self.log.anvandarval("Monitoreringssession", "Tid")
             clear_terminal()
@@ -194,7 +195,7 @@ class Monitoreringssystem:
             self.log.info("Oändlig monitorering startad")
             self.monitoring_loop("Oändlig")
 
-# Huvudmeny
+# Meny för monitoreringssystemet
 def main():
     monitor = Monitoreringssystem()
     while True:
@@ -202,7 +203,7 @@ def main():
         choice = input("Vad vill du göra?\n" \
         "1. Ladda alarm.\n" \
         "2. Starta monitorsession.\n" \
-        "3. Avsluta.\n"
+        "3. Återgå till huvudmeny.\n" \
         "Gör ett val (1-3): ")
         match choice:
             case "1":
@@ -213,10 +214,10 @@ def main():
                 monitor.log.info("Monitoreringssession har startats")
                 monitor.start_monitor_session()
             case "3":
-                monitor.log.anvandarval("Huvudmeny", "Avsluta")
-                monitor.log.info("Programmet avslutas")
+                monitor.log.anvandarval("Huvudmeny", "Återgå till huvudmeny")
+                monitor.log.info("Återgår till huvudmenyn")
                 monitor.log.avsluta()
-                exit(0)
+                break
             case _:
                 print("Du har angivit ett felaktikt val")
                 monitor.log.anvandarval("Huvudmeny", "Felaktigt val")
