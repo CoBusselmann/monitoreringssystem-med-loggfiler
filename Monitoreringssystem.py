@@ -3,8 +3,6 @@ import time
 import sys
 from loggsystem import Loggsystem
 
-
-
 # Rensar terminalen - används för att presentera monitoreringsinformationen snyggare
 def clear_terminal():
     sys.stdout.write("\033[H\033[J")
@@ -13,17 +11,18 @@ def clear_terminal():
 def alarm_triggered(value, limit):
     return limit is not None and value >= limit
 
-# Skapar en klass för monitoreringssystemet
+# Skapar en klass för monitoreringssystemet, som tar emot en instans av Loggsystem som parameter.
 class Monitoreringssystem:
-    def __init__(self):
-        self.log = Loggsystem()
+    def __init__(self, log):
+        self.log = log
+
         # Ställ in larmnivåer, värden hämtas från alarm_doc.txt via load_alarms()
         self.warning_limits = {
             "CPU": None,
             "RAM": None,
             "DISK": None
         }
-
+    
     # Laddar larmnivåer från alarm_doc.txt och uppdaterar self.warning_limits
     def load_alarms(self):
         try:
@@ -47,8 +46,8 @@ class Monitoreringssystem:
                         print(f"DISK-alarm inställt till: {self.warning_limits["DISK"]}%")
             
             self.log.info("Alarm har laddats från alarm_doc.txt")    
-            print("Återgår till huvudmenyn om 5 sekunder")
-            self.log.info("Återgår till huvudmenyn om 5 sekunder")
+            print("Återgår till menyn om 5 sekunder")
+            self.log.info("Återgår till menyn om 5 sekunder")
             time.sleep(5)
         except OSError as e:
             print(f"Fel vid läsning av alarm_doc.txt: {e}")
@@ -57,10 +56,11 @@ class Monitoreringssystem:
             print(f"Felaktigt värde i alarm_doc.txt: {e}")
             self.log.fel(f"Felaktigt värde i alarm_doc.txt: {e}")
         
-
     # Monitoreringsloop som körs tills användaren avbryter eller tills en viss tid/iterationer har passerat
     def monitoring_loop(self, limittype, maxvalue=None):
         self.log.funktion("monitoring_loop")
+
+        # Använder sys.stdout.write istället för print för att skriva ut text utan ny rad och utan buffring
         writer = sys.stdout.write
 
         # Mäter hur länge monitoreringen har pågått
@@ -70,7 +70,6 @@ class Monitoreringssystem:
         
         try:
             while True:
-                
                 clear_terminal()
 
                 # Kollar om monitoreringen ska avbrytas baserat på tid eller antal iterationer
@@ -104,23 +103,19 @@ class Monitoreringssystem:
 
                 writer(f"\nCPU: {cpu}% | RAM: {ram.percent}% | Disk: {disk.percent}%\r")
                 
-                #Gör att texten skrivs ut direkt och buffras inte
+                # Gör att texten skrivs ut direkt och buffras inte
                 sys.stdout.flush()
-
-                #time.sleep skapar en paus i X sekunder, för att användaren ska kunna se det som står i terminalen
-                time.sleep(2)
 
                 iterations += 1
                     
         except KeyboardInterrupt:
             clear_terminal()
-            print("Monitorering manuellt avbruten - återgår till huvudmenyn")
+            print("Monitorering manuellt avbruten - återgår till menyn")
             self.log.info("Monitorering manuellt avbruten")
             time.sleep(3)
             return
-            
-
-        print("Monitorering avslutad - återgår till huvudmenyn")
+        
+        print("Monitorering avslutad - återgår till menyn")
         time.sleep(3)
         
     # Startar monitoreringssessionen och frågar användaren om hur länge den ska köras
@@ -196,8 +191,8 @@ class Monitoreringssystem:
             self.monitoring_loop("Oändlig")
 
 # Meny för monitoreringssystemet
-def main():
-    monitor = Monitoreringssystem()
+def main(log):
+    monitor = Monitoreringssystem(log)
     while True:
         clear_terminal()
         choice = input("Vad vill du göra?\n" \
@@ -207,21 +202,18 @@ def main():
         "Gör ett val (1-3): ")
         match choice:
             case "1":
-                monitor.log.anvandarval("Huvudmeny", "Ladda alarm")
+                log.anvandarval("Meny för monitorering", "Ladda alarm")
                 monitor.load_alarms()
             case "2":
-                monitor.log.anvandarval("Huvudmeny", "Starta monitorsession")
-                monitor.log.info("Monitoreringssession har startats")
+                log.anvandarval("Meny för monitorering", "Starta monitorsession")
+                log.info("Monitoreringssession har startats")
                 monitor.start_monitor_session()
             case "3":
-                monitor.log.anvandarval("Huvudmeny", "Återgå till huvudmeny")
-                monitor.log.info("Återgår till huvudmenyn")
+                log.anvandarval("Meny för monitorering", "Återgå till huvudmeny")
+                log.info("Återgår till huvudmenyn")
                 break
             case _:
                 print("Du har angivit ett felaktikt val")
-                monitor.log.anvandarval("Huvudmeny", "Felaktigt val")
-                monitor.log.fel("Felaktigt val i huvudmenyn")
+                log.anvandarval("Meny för monitorering", "Felaktigt val")
+                log.fel("Felaktigt val i menyn för monitorering")
                 time.sleep(2)
-
-if __name__ == "__main__":
-    main()
