@@ -216,7 +216,6 @@ def main():
             case "3":
                 monitor.log.anvandarval("Huvudmeny", "Återgå till huvudmeny")
                 monitor.log.info("Återgår till huvudmenyn")
-                monitor.log.avsluta()
                 break
             case _:
                 print("Du har angivit ett felaktikt val")
