@@ -21,4 +21,4 @@ WIP - Här får vi fylla på
 - `menu.py` – meny för larmkonfiguration.
 - `alarm.py` – hantering och lagring av larm.
 - `loggsystem.py` – loggning av händelser och larm.
-- `requirements.txt` – det externa beroendet `psutil`.
+- `requirements.txt` – visar vilka externa paket som behövs för att köra programmet.
