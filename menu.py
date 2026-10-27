@@ -127,5 +127,6 @@ def menu():
             logg.fel("Ogiltigt meny val")
             print("Ogiltigt meny val, försök igen.")
 
-menu()
+if __name__ == "__main__":
+    menu()
 
