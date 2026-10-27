@@ -7,7 +7,7 @@ def menu(log):
     #instanser av loggsystem och AlarmManager klasserna
     log = Loggsystem() 
     manager = AlarmManager()
-    manager.load_alarms("alarm_doc.txt")#Hämtar sparade alarm från filen alarm_doc.txt
+    manager.load_alarms("alarm_doc.txt")
     log.data_laddad("alarm_doc.txt")
     log.funktion("meny") #Logg till loggsystem, implementerat i varje funktion.
 
