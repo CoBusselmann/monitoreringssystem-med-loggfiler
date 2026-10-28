@@ -7,13 +7,13 @@ from pathlib import Path
 class Loggsystem:
     def __init__(self):
         # Skapar mappen logs om den inte redan finns
-        self.loggmapp = Path("logs")
-        self.loggmapp.mkdir(exist_ok=True)
+        self.logfolder = Path("logs")
+        self.logfolder.mkdir(exist_ok=True)
 
         # Skapar ett unikt filnamn med datum, tid och ID
         tid = datetime.now().strftime("%Y-%m-%d_%H-%M-%S_%f")
 
-        self.filnamn = self.loggmapp / f"{tid}.log"
+        self.filename = self.logfolder / f"{tid}.log"
 
         # Skapar en logger för just denna session
         self.logger = logging.getLogger(f"logg_{tid}")
@@ -22,8 +22,8 @@ class Loggsystem:
 
         # Bestämmer att loggen ska skrivas till fil
         try:
-            self.filhanterare = logging.FileHandler(
-            self.filnamn, encoding="utf-8"
+            self.filehandler = logging.FileHandler(
+            self.filename, encoding="utf-8"
             )
         except OSError as fel:
             print(f"Kunde inte skapa loggfilen: {fel}")
@@ -35,8 +35,8 @@ class Loggsystem:
             datefmt="%Y-%m-%d %H:%M:%S"
         )
 
-        self.filhanterare.setFormatter(format_template)
-        self.logger.addHandler(self.filhanterare)
+        self.filehandler.setFormatter(format_template)
+        self.logger.addHandler(self.filehandler)
 
         self.info("Loggning har startat")
 
@@ -79,5 +79,5 @@ class Loggsystem:
     def end_log(self):
         # Skriver sista raden och stänger loggfilen
         self.info("Loggsystem avslutat")
-        self.logger.removeHandler(self.filhanterare)
-        self.filhanterare.close()
+        self.logger.removeHandler(self.filehandler)
+        self.filehandler.close()
