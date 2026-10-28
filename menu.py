@@ -6,8 +6,8 @@ def menu(log):
     #instanser av loggsystem och AlarmManager klasserna
     manager = AlarmManager()
     manager.load_alarms("alarm_doc.txt")
-    log.data_laddad("alarm_doc.txt")
-    log.funktion("Startmeny Larm-system")
+    log.log_file_data("alarm_doc.txt")
+    log.log_function("Startmeny Larm-system")
 
     while True:
         #Första meny vid start av Larm-konf.
@@ -18,7 +18,7 @@ def menu(log):
         print("4. Skicka larm till Monitoreringssystem")
         print("5. Avsluta")
         choice = input("Meny val: ")
-        log.anvandarval("Startmeny Larm-larmsystem", choice)
+        log.user_choice("Startmeny Larm-larmsystem", choice)
         
         if choice == "1":
             #kategori och nivå för alarmet som ska läggas till
@@ -28,7 +28,7 @@ def menu(log):
             print("3. Disk")
 
             category = input("Alarm val: ")
-            log.anvandarval("Valt Larm:", category)
+            log.user_choice("Valt Larm:", category)
 
             if category == "1":
                 category = "cpu"
@@ -38,20 +38,20 @@ def menu(log):
                 category = "disk"
             else: 
                 print("Ogiltigt val, försök igen.")
-                log.fel(f"Ogiltigt alarm kategori {category}")
+                log.log_error(f"Ogiltigt alarm kategori {category}")
                 continue
             try:
                 level = float(input("Ange larmnivå: "))
-                log.anvandarval("Larm nivå,", level)
+                log.user_choice("Larm nivå:", level)
                 #felhantering ifall användaren inte anger en siffra för larmnivån
             except ValueError:
                 print("Du måste ange en siffra för larmnivån. Försök igen.")
-                log.fel(f"Ogiltig Larm nivå, {level}")
+                log.log_error(f"Ogiltig Larm nivå, {level}")
                 continue
                 #felhantering ifall användaren anger en larmnivå som inte är mellan 0 och 100
             if level < 0 or level > 100:
                 print("Larmnivån måste vara mellan 0 och 100. Försök igen.")
-                log.fel(f"Ogiltig Larm nivå {level}")
+                log.log_error(f"Ogiltig Larm nivå {level}")
                 continue
                 
             manager.add_alarm(category, level)
@@ -61,7 +61,7 @@ def menu(log):
         elif choice == "2":
             #Val vid borttagning av alarm
             #Visar lista på alla aktiva alarm om det finns några.
-            log.funktion("Ta bort alarm startat.")
+            log.log_function("Ta bort alarm startat.")
             alarms = manager.show_alarms()
 
             if not alarms: 
@@ -85,12 +85,12 @@ def menu(log):
                     log.info(f"Tar bort larm {removed_alarm['category'].upper()} med nivå {removed_alarm['level']}%")
                     #felhantering vid ogiltigt val av index.
                 except (ValueError, IndexError):
-                    log.info("Ogiltigt val vid borttagning av alarm")
+                    log.log_error("Ogiltigt val vid borttagning av alarm")
                     print("Ogiltigt val, försök igen.")
 
         elif choice == "3":
             #Meny val för att visa alla aktiva alarm om det finns några.
-            log.funktion("Visa alarm, startat.")
+            log.log_function("Visa alarm, startat.")
             alarms = manager.show_alarms()#s
 
             if not alarms:
@@ -104,25 +104,25 @@ def menu(log):
 
         elif choice == "4":
             #Meny val för att skicka alla larm till alarm_doc.txt, där filen läses av Monitoreringssystemet.
-            log.funktion("Funktion, skicka larm till Monitoreringssystem.")
+            log.log_function("Funktion, skicka larm till Monitoreringssystem.")
             try:
                 manager.send_alarms("alarm_doc.txt")
                 print("Larmen har skickats till Monitoreringssystemet.")
             except OSError:#Felhantering ifall filen inte kan sparas
                 print("Kunde inte spara filen.")
-                log.fel("Fil kunde ej sparas.")
+                log.log_error("Fil kunde ej sparas.")
 
         elif choice == "5":
             #avslutar och sparar alla aktiva alarm i alarm_doc.txt filen.
-            log.funktion("Avslutar Larm-system.")
-            log.data_sparad("Sparat larm i alarm_doc.txt")
+            log.log_function("Avslutar Larm-system.")
+            log.info("Sparat larm i alarm_doc.txt")
             manager.saved_alarms("alarm_doc.txt")
             print("Avslutar system.")
             break
 
         else:
 
-            log.fel("Ogiltigt meny val")
+            log.log_error("Ogiltigt meny val")
             print("Ogiltigt meny val, försök igen.")
 
 if __name__ == "__main__":
