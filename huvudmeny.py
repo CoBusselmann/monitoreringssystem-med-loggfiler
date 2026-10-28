@@ -13,23 +13,23 @@ def main():
             print("3. Avsluta")
             choice = input("Meny val: ")
             if choice == "1":
-                log.anvandarval("Huvudmeny", "Starta Larm-konfigurationssystem")
+                log.user_choices("Huvudmeny", "Starta Larm-konfigurationssystem")
                 log.info("Larm-konfigurationssystem startat")
                 menu.menu(log)
             elif choice == "2":
-                log.anvandarval("Huvudmeny", "Starta Monitoreringssystem")
+                log.user_choices("Huvudmeny", "Starta Monitoreringssystem")
                 log.info("Monitoreringssystem startat")
                 Monitoreringssystem.main(log)
             elif choice == "3":
-                log.anvandarval("Huvudmeny", "Avsluta")
+                log.user_choices("Huvudmeny", "Avsluta")
                 log.info("Programmet avslutas")
-                log.avsluta()
+                log.end_log()
                 print("Avslutar programmet")
                 break
             else:
                 print("Ogiltigt val, försök igen.")
-                log.anvandarval("Huvudmeny", "Felaktigt val")
-                log.fel("Felaktigt val i huvudmenyn")
+                log.user_choices("Huvudmeny", "Felaktigt val")
+                log.log_error("Felaktigt val i huvudmenyn")
     except KeyboardInterrupt:
         print("\nProgrammet avbrutet av användaren.")
         log.info("Programmet avbrutet av användaren.")

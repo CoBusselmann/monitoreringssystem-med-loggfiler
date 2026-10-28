@@ -26,7 +26,7 @@ class Monitoreringssystem:
     # Laddar larmnivåer från alarm_doc.txt och uppdaterar self.warning_limits
     def load_alarms(self):
         try:
-            self.log.funktion("load_alarms")
+            self.log.log_function("load_alarms")
             # Rensar terminalen
             clear_terminal()
 
@@ -51,14 +51,14 @@ class Monitoreringssystem:
             time.sleep(5)
         except OSError as e:
             print(f"Fel vid läsning av alarm_doc.txt: {e}")
-            self.log.fel(f"Fel vid läsning av alarm_doc.txt: {e}")
+            self.log.log_error(f"Fel vid läsning av alarm_doc.txt: {e}")
         except ValueError as e:
             print(f"Felaktigt värde i alarm_doc.txt: {e}")
-            self.log.fel(f"Felaktigt värde i alarm_doc.txt: {e}")
+            self.log.log_error(f"Felaktigt värde i alarm_doc.txt: {e}")
         
     # Monitoreringsloop som körs tills användaren avbryter eller tills en viss tid/iterationer har passerat
     def monitoring_loop(self, limittype, maxvalue=None):
-        self.log.funktion("monitoring_loop")
+        self.log.log_function("monitoring_loop")
 
         # Använder sys.stdout.write istället för print för att skriva ut text utan ny rad och utan buffring
         writer = sys.stdout.write
@@ -91,15 +91,15 @@ class Monitoreringssystem:
                 # Kollar om CPU, RAM eller Disk har passerat larmgränsen och loggar det i loggsystemet - True om larmet har passerat, annars False
                 if alarm_triggered(cpu, self.warning_limits["CPU"]):
                     writer(f"CPU-användning är över {self.warning_limits['CPU']}%\n")
-                    self.log.larm("CPU", self.warning_limits["CPU"])
+                    self.log.log_alarm("CPU", self.warning_limits["CPU"])
 
                 if alarm_triggered(ram.percent, self.warning_limits["RAM"]):
                     writer(f"RAM-användning är över {self.warning_limits['RAM']}%\n")
-                    self.log.larm("RAM", self.warning_limits["RAM"])
+                    self.log.log_alarm("RAM", self.warning_limits["RAM"])
             
                 if alarm_triggered(disk.percent, self.warning_limits["DISK"]):
                     writer(f"Disk-användning är över {self.warning_limits['DISK']}%\n")
-                    self.log.larm("DISK", self.warning_limits["DISK"])
+                    self.log.log_alarm("DISK", self.warning_limits["DISK"])
 
                 writer(f"\nCPU: {cpu}% | RAM: {ram.percent}% | Disk: {disk.percent}%\r")
                 
@@ -120,7 +120,7 @@ class Monitoreringssystem:
         
     # Startar monitoreringssessionen och frågar användaren om hur länge den ska köras
     def start_monitor_session(self):
-        self.log.funktion("start_monitor_session")
+        self.log.log_function("start_monitor_session")
         clear_terminal()
         duration = 0
         choice = input("Hur vill du bestämma tid?\n" \
@@ -131,14 +131,14 @@ class Monitoreringssystem:
 
         # Användaren väljer hur monitoreringssessionen ska köras.
         if choice == "1":
-            self.log.anvandarval("Monitoreringssession", "Tid")
+            self.log.user_choices("Monitoreringssession", "Tid")
             clear_terminal()
             try:
                 duration = int(input("Ange längd i sekunder: "))
 
                 if duration <= 0:
                     print("Värdet måste vara högre än 0.")
-                    self.log.fel("Felaktigt värde för sekunder")
+                    self.log.log_error("Felaktigt värde för sekunder")
                     time.sleep(2)
                     return
 
@@ -149,7 +149,7 @@ class Monitoreringssystem:
                 
             except ValueError as e:
                 print(f"Felaktigt värde: {e}")
-                self.log.fel("Felaktigt värde för sekunder")
+                self.log.log_error("Felaktigt värde för sekunder")
                 time.sleep(2)
 
             except KeyboardInterrupt:
@@ -158,7 +158,7 @@ class Monitoreringssystem:
                 time.sleep(2)
 
         elif choice == "2":
-            self.log.anvandarval("Monitoreringssession", "Iterationer")
+            self.log.user_choices("Monitoreringssession", "Iterationer")
             clear_terminal()
             try:
                 duration = int(
@@ -166,7 +166,7 @@ class Monitoreringssystem:
                     )
                 if duration <= 0:
                     print("Värdet måste vara högre än 0.")
-                    self.log.fel("Felaktigt värde för iterationer")
+                    self.log.log_error("Felaktigt värde för iterationer")
                     time.sleep(2)
                     return
                 
@@ -177,7 +177,7 @@ class Monitoreringssystem:
 
             except ValueError as e:
                 print(f"Felaktigt värde: {e}")
-                self.log.fel("Felaktigt värde för iterationer")
+                self.log.log_error("Felaktigt värde för iterationer")
                 time.sleep(2)
         
             except KeyboardInterrupt:
@@ -186,7 +186,7 @@ class Monitoreringssystem:
                 time.sleep(2)
 
         elif choice == "3":
-            self.log.anvandarval("Monitoreringssession", "Oändlig")
+            self.log.user_choices("Monitoreringssession", "Oändlig")
             self.log.info("Oändlig monitorering startad")
             self.monitoring_loop("Oändlig")
 
@@ -202,18 +202,18 @@ def main(log):
         "Gör ett val (1-3): ")
         match choice:
             case "1":
-                log.anvandarval("Meny för monitorering", "Ladda alarm")
+                log.user_choices("Meny för monitorering", "Ladda alarm")
                 monitor.load_alarms()
             case "2":
-                log.anvandarval("Meny för monitorering", "Starta monitorsession")
+                log.user_choices("Meny för monitorering", "Starta monitorsession")
                 log.info("Monitoreringssession har startats")
                 monitor.start_monitor_session()
             case "3":
-                log.anvandarval("Meny för monitorering", "Återgå till huvudmeny")
+                log.user_choices("Meny för monitorering", "Återgå till huvudmeny")
                 log.info("Återgår till huvudmenyn")
                 break
             case _:
                 print("Du har angivit ett felaktikt val")
-                log.anvandarval("Meny för monitorering", "Felaktigt val")
-                log.fel("Felaktigt val i menyn för monitorering")
+                log.user_choices("Meny för monitorering", "Felaktigt val")
+                log.log_error("Felaktigt val i menyn för monitorering")
                 time.sleep(2)
