@@ -18,7 +18,7 @@ def menu(log):
         print("4. Skicka larm till Monitoreringssystem")
         print("5. Avsluta")
         choice = input("Meny val: ")
-        log.user_choice("Startmeny Larm-larmsystem", choice)
+        log.user_choices("Startmeny Larm-larmsystem", choice)
         
         if choice == "1":
             #kategori och nivå för alarmet som ska läggas till
@@ -28,7 +28,7 @@ def menu(log):
             print("3. Disk")
 
             category = input("Alarm val: ")
-            log.user_choice("Valt Larm:", category)
+            log.user_choices("Valt Larm:", category)
 
             if category == "1":
                 category = "cpu"
@@ -42,7 +42,7 @@ def menu(log):
                 continue
             try:
                 level = float(input("Ange larmnivå: "))
-                log.user_choice("Larm nivå:", level)
+                log.user_choices("Larm nivå:", level)
                 #felhantering ifall användaren inte anger en siffra för larmnivån
             except ValueError:
                 print("Du måste ange en siffra för larmnivån. Försök igen.")
