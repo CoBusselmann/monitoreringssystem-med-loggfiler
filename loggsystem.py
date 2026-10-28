@@ -44,7 +44,7 @@ class Loggsystem:
         # Loggar information som visas för användaren
         self.logger.info(meddelande)
 
-    def user_choises(self, meny, val):
+    def user_choices(self, meny, val):
         # Sparar vilket menyval användaren gjorde
         self.logger.info(f"ANVÄNDARVAL | {meny}: {val}")
 
