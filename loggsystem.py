@@ -30,7 +30,7 @@ class Loggsystem:
             raise
 
         # Varje loggrad får datum, tid, typ och meddelande
-        formatmall = logging.Formatter(
+        format_template = logging.Formatter(
             "%(asctime)s | %(levelname)s | %(message)s",
             datefmt="%Y-%m-%d %H:%M:%S"
         )
@@ -44,39 +44,39 @@ class Loggsystem:
         # Loggar information som visas för användaren
         self.logger.info(meddelande)
 
-    def anvandarval(self, meny, val):
+    def user_choises(self, meny, val):
         # Sparar vilket menyval användaren gjorde
         self.logger.info(f"ANVÄNDARVAL | {meny}: {val}")
 
-    def funktion(self, namn):
+    def log_function(self, namn):
         # Loggar när en funktion startas
         self.logger.info(f"FUNKTION | {namn}")
 
-    def matning(self, cpu, ram, disk):
+    def log_monitor(self, cpu, ram, disk):
         # Loggar värden från monitoreringssystemet
         self.logger.info(
             f"MÄTNING | CPU: {cpu}% | RAM: {ram}% | DISK: {disk}%"
         )
 
-    def larm(self, kategori, niva):
+    def log_alarm(self, kategori, niva):
         # Loggar när ett larm aktiveras
         self.logger.warning(
             f"LARM | {kategori.upper()} över {niva}%"
         )
 
-    def data_laddad(self, data):
+    def log_file_data(self, data):
         # Loggar data som laddats från en fil
         self.logger.info(f"DATA LADDAD | {data}")
 
-    def data_sparad(self, data):
+    def log_saved_data(self, data):
         # Loggar data som sparats till en fil
         self.logger.info(f"DATA SPARAD | {data}")
 
-    def fel(self, meddelande):
+    def log_error(self, meddelande):
         # Loggar fel och felmeddelanden
         self.logger.error(meddelande)
 
-    def avsluta(self):
+    def end_log(self):
         # Skriver sista raden och stänger loggfilen
         self.info("Loggsystem avslutat")
         self.logger.removeHandler(self.filhanterare)
