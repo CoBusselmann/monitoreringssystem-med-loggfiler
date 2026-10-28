@@ -1,15 +1,13 @@
 from alarm import AlarmManager
-from loggsystem import Loggsystem
 
-#Hämtar AlarmManager klassen från alarm.py filen samt Loggsystem från loggsystem.py
+#Hämtar AlarmManager klassen från alarm.py.
 def menu(log):
 
     #instanser av loggsystem och AlarmManager klasserna
-    log = Loggsystem() 
     manager = AlarmManager()
     manager.load_alarms("alarm_doc.txt")
     log.data_laddad("alarm_doc.txt")
-    log.funktion("meny") #Logg till loggsystem, implementerat i varje funktion.
+    log.funktion("Startmeny Larm-system")
 
     while True:
         #Första meny vid start av Larm-konf.
@@ -20,7 +18,7 @@ def menu(log):
         print("4. Skicka larm till Monitoreringssystem")
         print("5. Avsluta")
         choice = input("Meny val: ")
-        log.anvandarval("Meny", choice)
+        log.anvandarval("Startmeny Larm-larmsystem", choice)
         
         if choice == "1":
             #kategori och nivå för alarmet som ska läggas till
@@ -30,7 +28,7 @@ def menu(log):
             print("3. Disk")
 
             category = input("Alarm val: ")
-            log.anvandarval("Alarm kategori", category)
+            log.anvandarval("Valt Larm:", category)
 
             if category == "1":
                 category = "cpu"
