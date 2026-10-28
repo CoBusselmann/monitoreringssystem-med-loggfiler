@@ -35,7 +35,7 @@ class Loggsystem:
             datefmt="%Y-%m-%d %H:%M:%S"
         )
 
-        self.filhanterare.setFormatter(formatmall)
+        self.filhanterare.setFormatter(format_template)
         self.logger.addHandler(self.filhanterare)
 
         self.info("Loggning har startat")
