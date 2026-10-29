@@ -1,4 +1,5 @@
 from alarm import AlarmManager
+from user_input import get_user_input
 
 #Hämtar AlarmManager klassen från alarm.py.
 def menu(log):
@@ -17,7 +18,7 @@ def menu(log):
         print("3. Visa alla aktiva larm")
         print("4. Skicka larm till Monitoreringssystem")
         print("5. Avsluta")
-        choice = input("Meny val: ")
+        choice = get_user_input("Meny val: ")
         log.user_choices("Startmeny Larm-larmsystem", choice)
         
         if choice == "1":
@@ -27,7 +28,7 @@ def menu(log):
             print("2. RAM")
             print("3. Disk")
 
-            category = input("Alarm val: ")
+            category = get_user_input("Alarm val: ")
             log.user_choices("Valt Larm:", category)
 
             if category == "1":
@@ -41,7 +42,7 @@ def menu(log):
                 log.log_error(f"Ogiltigt alarm kategori {category}")
                 continue
             try:
-                level = float(input("Ange larmnivå: "))
+                level = float(get_user_input("Ange larmnivå: "))
                 log.user_choices("Larm nivå:", level)
                 #felhantering ifall användaren inte anger en siffra för larmnivån
             except ValueError:
@@ -79,7 +80,7 @@ def menu(log):
 
                 try:
 
-                    index = int(input("Ange numret på alarmet du vill ta bort: ")) - 1
+                    index = int(get_user_input("Ange numret på alarmet du vill ta bort: ")) - 1
                     removed_alarm = manager.remove_alarm(index)
                     print(f"Du har tagit bort ett {removed_alarm['category'].upper()} larm med nivå {removed_alarm['level']}%.")
                     log.info(f"Tar bort larm {removed_alarm['category'].upper()} med nivå {removed_alarm['level']}%")

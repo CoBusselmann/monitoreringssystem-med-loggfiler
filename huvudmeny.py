@@ -1,6 +1,7 @@
 import Monitoreringssystem
 import menu
 from loggsystem import Loggsystem
+from user_input import get_user_input
 
 def main():
     log = Loggsystem()
@@ -11,7 +12,7 @@ def main():
             print("1. Starta Larm-konfigurationssystem")
             print("2. Starta Monitoreringssystem")
             print("3. Avsluta")
-            choice = input("Meny val: ")
+            choice = get_user_input("Meny val: ")
             if choice == "1":
                 log.user_choices("Huvudmeny", "Starta Larm-konfigurationssystem")
                 log.info("Larm-konfigurationssystem startat")
