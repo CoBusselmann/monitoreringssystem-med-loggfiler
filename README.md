@@ -26,6 +26,11 @@ Om användaren väljer val 2 så kommer man till Monitoreringssystem där man bl
 * Starta monitoreringssession - Här får man välja hur man ska monitorera, om det är i X antal sekunder, X antal iterationer eller oändligt. När man har valt det så startar monitoriseringen och man ser resultatet i terminalen. 
 * Återgå till huvudmeny 
 
+Det finns även möjlighet att köra programmet med kommandoradargument, här är några exempel:
+* py huvudmeny.py load-alarms
+* py huvudmeny.py monitor --mode time --value 30
+* py huvudmeny.py monitor --mode iterations --value 10
+* py huvudmeny.py monitor --mode infinite
 
 ## Filer
 - `huvudmeny.py` - huvudmeny för programmet
