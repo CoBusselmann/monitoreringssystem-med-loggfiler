@@ -26,17 +26,12 @@ class AlarmManager:
     def show_alarms(self):
         return self.alarms
 
-    #Sparar alarm till en textfil som läses av Monitoreringssystemet.
+    #Sparar alarm till en textfil som läses av Monitoreringssystemet. används vid avslutning av programmet också.
     def send_alarms(self, path):
         with open(path, "w", encoding="utf-8") as file:
             for alarm in self.alarms:
                 file.write(f"{alarm['category']};{alarm['level']}\n")
 
-    #Sparar alarm till en textfil
-    def saved_alarms(self, path):
-        with open(path, "w", encoding="utf-8") as file:
-            for alarm in self.alarms:
-                file.write(f"{alarm['category']};{alarm['level']}\n")
 
     #laddar alarm från textfilen
     def load_alarms(self, path):
