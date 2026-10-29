@@ -116,7 +116,7 @@ def menu(log):
             #avslutar och sparar alla aktiva alarm i alarm_doc.txt filen.
             log.log_function("Avslutar Larm-system.")
             log.info("Sparat larm i alarm_doc.txt")
-            manager.saved_alarms("alarm_doc.txt")
+            manager.send_alarms("alarm_doc.txt")
             print("Avslutar system.")
             break
 
