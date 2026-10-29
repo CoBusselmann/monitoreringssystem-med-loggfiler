@@ -1,7 +1,7 @@
 from alarm import AlarmManager
 from user_input import get_user_input
 
-#Hämtar AlarmManager klassen från alarm.py.
+#Hämtar AlarmManager klassen från alarm.py. samt user_input för CLI argument
 def menu(log):
 
     #instanser av loggsystem och AlarmManager klasserna
