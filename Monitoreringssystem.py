@@ -2,6 +2,7 @@ import psutil
 import time
 import sys
 from loggsystem import Loggsystem
+from user_input import get_user_input
 
 # Rensar terminalen - används för att presentera monitoreringsinformationen snyggare
 def clear_terminal():
@@ -123,7 +124,7 @@ class Monitoreringssystem:
         self.log.log_function("start_monitor_session")
         clear_terminal()
         duration = 0
-        choice = input("Hur vill du bestämma tid?\n" \
+        choice = get_user_input("Hur vill du bestämma tid?\n" \
         "1. Tid\n" \
         "2. Iterationer\n"
         "3. Oändligt - Avbryts med CTRL-C\n"
@@ -134,7 +135,7 @@ class Monitoreringssystem:
             self.log.user_choices("Monitoreringssession", "Tid")
             clear_terminal()
             try:
-                duration = int(input("Ange längd i sekunder: "))
+                duration = int(get_user_input("Ange längd i sekunder: "))
 
                 if duration <= 0:
                     print("Värdet måste vara högre än 0.")
@@ -162,7 +163,7 @@ class Monitoreringssystem:
             clear_terminal()
             try:
                 duration = int(
-                    input("Ange längd i antal iterationer: ")
+                    get_user_input("Ange längd i antal iterationer: ")
                     )
                 if duration <= 0:
                     print("Värdet måste vara högre än 0.")
@@ -195,7 +196,7 @@ def main(log):
     monitor = Monitoreringssystem(log)
     while True:
         clear_terminal()
-        choice = input("Vad vill du göra?\n" \
+        choice = get_user_input("Vad vill du göra?\n" \
         "1. Ladda alarm.\n" \
         "2. Starta monitorsession.\n" \
         "3. Återgå till huvudmeny.\n" \
